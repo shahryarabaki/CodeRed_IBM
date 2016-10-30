@@ -1,0 +1,110 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+
+
+  <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script type="text/javascript" src="http://ajax.microsoft.com/ajax/jquery/jquery-1.6.2.min.js"></script>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <script>
+    videoId = "{{ video_id }}";
+    results = {{ results|tojson }};
+    console.log(results);
+    words = results[0];
+    locs = results[1];
+    word_locs = results[2];
+    seg_locs = results[3];
+    emotions = results[4];
+    keywords = results[5];
+  </script>
+  <script src="static/youtube.js"></script>
+  <script src="static/chart.js"></script>
+  <script src="static/video_bar.js"></script>
+  <head>
+    <title>Video Analyzer</title>
+    <link rel="stylesheet" media="screen" href ="static/bootstrap.min.css">
+    <link rel="stylesheet" href="static/bootstrap-theme.min.css">
+    <link rel="stylesheet" type="text/css" href="static/analyze.css">
+    <meta name="viewport" content = "width=device-width initial-scale=1.0">
+
+  </head>
+  <body>
+
+    <style>
+      body{
+        background-image: url("https://c2.staticflickr.com/8/7163/6769877431_c0df769478_b.jpg");
+        background-size: 100% 100%;
+      }
+      h1{
+        font-size:6em;
+        font-family: "Brush Script MT", cursive;
+        color: white;
+      }
+    </style>
+
+
+
+    <div class="container" style="width: 900px; padding: 50px; margin: 0 auto; background: rgba(255, 255, 255, 0.2">
+
+      <h1 class="text-center">Vibez</h1>
+      <form action="analyze" method="post" role="form" enctype="multipart/form-data">
+
+        {{ form.csrf }}
+        <div class="form-group">
+          <font color = "white"><label for="url">1. Youtube URL:</label></font>
+          <input type="text" class="form-control" id="url" name="url" placeholder="Enter the Youtube URL">
+        </div>
+
+        <div class="form-group">
+          <font color = "white"><label for "file">2. Upload the corresponding audio file: </label></font>
+          <input type="file" name="file">
+        </div>
+        <button type="submit" class="btn btn-info btn-md"><font size = "3">Analyze!</font></button>
+      </form>
+      <br>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+
+      {% for message in messages %}
+      {% if "Error" not in message[1]: %}
+      <div class="alert alert-info">
+        <strong>Success! </strong> {{ message[1] }}
+      </div>
+      {% endif %}
+
+      {% if "Error" in message[1]: %}
+      <div class="alert alert-warning">
+        {{ message[1] }}
+      </div>
+      {% endif %}
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+      <div id="player" style="margin:auto;display: block"></div>
+      <canvas id="myCanvas" width="800" height="20" style="padding-left: 0;padding-right: 0;margin-left: auto;margin-right: auto;display: block;border:0">Your browser does not support the HTML5 canvas tag.</canvas>
+
+      <br>
+
+      <div class="input-group" align="center">
+        <input type="text" class="form-control" id="search" name="search" placeholder="Search for a word or phrase..." onkeydown="if (event.keyCode == 13) searchCurKeywords()">
+        <span class="input-group-btn">
+          <button class="btn btn-success" onclick="searchCurKeywords()">Search!</button>
+        </span>
+      </div>
+
+      <br>
+
+      <div id="keywordsElem"> </div>
+
+      <br>
+
+    <div id="container" style="min-width: 310px; height: 300px; max-width: 800px; margin: 0 auto">
+    </div>
+  </div>
+
+
+
+</body>
+  <script src="../static/analyze.js"></script>
+</html>
