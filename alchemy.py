@@ -12,6 +12,15 @@ def keyword(text_input):
 	alchemy_language = AlchemyLanguageV1(api_key=API_KEY)
 	return json.dumps(alchemy_language.keywords(text=text_input), indent=2)
 
-def concepts(text_input):
+def concept(text_input):
 	alchemy_language = AlchemyLanguageV1(api_key=API_KEY)
-	return json.dumps(alchemy_language.concepts(text=text_input), indent=2)
+	return (json.dumps(alchemy_language.concepts(text=text_input), indent=2))
+	
+if __name__ == '__main__':
+	
+	infile = open('nlp_test.txt').read()
+	value = concept(infile)
+	print (value)
+	outfile =  open('nlp_test_out.txt', 'w')
+	outfile.write(value)
+	outfile.close()
